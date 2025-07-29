@@ -1,18 +1,37 @@
 <template>
-    <div>
-<h1> Thông tin người dùng</h1>
-<div class="grid grid-cols-2 mx-auto my-3">
-<span>Tên: {{ form.name }}</span>
-<span>Email: {{ form.email }}</span>
-<span>Số điện thoại:{{ form.phone??" không có số điện thoại"}}</span>
-<span> Giới tính: {{ form.gender }}</span>
-<span> Địa chỉ :{{ form.address }}</span>
-
-
-</div>
+    <div class="max-w-2xl mx-auto mt-8 p-6 bg-white shadow-md rounded-xl">
+      <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+        Thông tin người dùng
+      </h1>
   
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
+        <div class="flex flex-col">
+          <span class="font-medium">Tên:</span>
+          <span>{{ form.name }}</span>
+        </div>
+  
+        <div class="flex flex-col">
+          <span class="font-medium">Email:</span>
+          <span>{{ form.email }}</span>
+        </div>
+  
+        <div class="flex flex-col">
+          <span class="font-medium">Số điện thoại:</span>
+          <span>{{ form.phone ?? 'Không có số điện thoại' }}</span>
+        </div>
+  
+        <div class="flex flex-col">
+          <span class="font-medium">Giới tính:</span>
+          <span>{{ form.gender }}</span>
+        </div>
+  
+        <div class="flex flex-col sm:col-span-2">
+          <span class="font-medium">Địa chỉ:</span>
+          <span>{{ form.address }}</span>
+        </div>
+      </div>
     </div>
-</template>
+  </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue';

@@ -9,7 +9,7 @@
       <Input v-model="form.age" label="Tuổi" type="number" placeholder="Nhập tuổi" />
       <Input v-model="form.phone" label="SĐT" type="number" placeholder="Nhập số điện thoại" />
 
-      <!-- Giới tính -->
+
       <div class="mb-4">
         <label class="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
         <select v-model="form.gender" class="w-full border-gray-300 rounded p-2">

@@ -1,7 +1,18 @@
 // src/composable/useUserApi.ts
 import { ref } from 'vue'
 import { deleteUser, getUserById, getUsers,createUser, updateAUser, getCompanies, getRoles} from '../api'
+interface user{
+  name: string,
+  email: string,
+  password: string,
+  age: number,
+  phone: number,
+  gender: string,
+  address: string,
+  role: string,
 
+}
+type NewUser = Omit<user,'id'>
 
 export default function useUserApi() {
   const users = ref<any[]>([])
