@@ -28,11 +28,21 @@ export const createUser = (data: any) => api.post("/users", data);
 export const updateAUser = (id: string, data: any) =>
   api.patch(`/users/${id}`, data);
 export const deleteUser = (id: string) => api.delete(`/users/${id}`);
+
+
+
 export const getCompanies = () => api.get("/companies");
-export const getRoles = () => api.get("/roles");
-
+//role
+export const getRoles = (params?: any) => api.get("/roles",{params});
+export const getRoleById = (id: string) => api.get(`/roles/${id}`);
+export const updateRole = (id: string, data: any)=> api.patch(`/roles/${id}`,data)
+export const deleteRole = (id: string) => api.delete(`/roles/${id}`);
+//permission
+export const getPermissions = (params?: any) => api.get("/permissions",{params});
+export const getPermission = (id: string) => api.get(`/permissions/${id}`);
+export const updatePermission = (id: string, data: any)=> api.patch(`/permissions/${id}`,data)
+export const deletePermission = (id: string) => api.delete(`/permissions/${id}`);
 //auth
-
 export const login = (credentials: LoginCredentials) =>
   api.post("/auth/login", credentials);
 export const register = (credentials: RegisterCredentials ) =>

@@ -18,17 +18,24 @@
   
   <script setup lang="ts">
   import Input from '../components/Input.vue';
+import { useNotification } from '../composable/useNotification';
   import { useAuthStore } from '../store/auth';
-  
+  const {addNotification} =useNotification()
   const { credentials, login } = useAuthStore();
+  import { useRouter } from 'vue-router';
   
+  const router = useRouter();
+
   const handleLogin = async () => {
     try {
       await login();
-      alert('Đăng nhập thành công');
+      addNotification('Thành công rồi')
+      setTimeout(() => {
+      router.push({ name: 'UserList' }); // hoặc router.push('/') tuỳ cấu hình route
+    }, 1000);
       
     } catch (e) {
-      alert('Đăng nhập thất bại');
+      addNotification('đăng nhập thất bại')
     }
   };
   </script>

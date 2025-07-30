@@ -3,7 +3,7 @@
     <!-- Thanh tiêu đề và nút tạo người dùng -->
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-lg font-semibold">Danh sách người dùng</h2>
-      <Input v-model="keyWord" label="Tìm kiếm người dùng" type="text" placeholder="Nhập tên tìm kiếm" />
+      <Input class="w-[500px]" v-model="keyWord" label="Tìm kiếm người dùng" type="text" placeholder="Nhập tên tìm kiếm" />
       <RoundButton variant="primary" @click="handleCreateUser">
         + Tạo người dùng
       </RoundButton>

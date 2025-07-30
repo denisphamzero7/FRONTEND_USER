@@ -5,11 +5,13 @@ export interface LoginCredentials {
   }
 
   export interface RegisterCredentials {
+    name: string;
     email: string;
     password: string;
-    fullName?: string;
-    roleId?: string;
-    companyId?: string;
+    age: number|null;
+    gender: string;
+    phone:number|null;
+    address:string
   }
   
 
