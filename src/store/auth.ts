@@ -13,7 +13,7 @@ export const useAuthStore = defineStore("auth", () => {
     username: "",
     password: "",
   });
-  const form = <Partial<RegisterCredentials>>({
+  const form = <RegisterCredentials>({
     name: "",
     email: "",
     password: "",

@@ -15,6 +15,8 @@ import CreatePermission from '../components/CreatePermission.vue'
 import EditPermission from '../components/EditPermission.vue'
 import DetailPermission from '../components/DetailPermission.vue'
 import Dashboard from '../views/Dashboard.vue'
+import ListPermission from '../components/ListPermission.vue'
+
 const routes = [
   { path: '/', name: 'UserList', component: ListUser },
   { path: '/users/create', name: 'CreateUser', component: CreateUser },
@@ -24,14 +26,17 @@ const routes = [
   {path:'/auth/register',name:'Register', component:RegisterView},
 
   {path:'/roles/',name:'Roles', component:ListRole},
-  {path:'/roles/:roleId',name:'DetailRole', component:DetailRole},
   {path:'/roles/create',name:'NewRole', component:CreateRole},
-  {path:'/auth/edit/roleId',name:'EditRole', component:EditRole},
+  { path: '/roles/edit/:roleId', name: 'EditRole', component: EditRole },
+  {path:'/roles/:roleId',name:'DetailRole', component:DetailRole},
 
-  {path:'/permissions/',name:'Permissions', component:Permissions},
-  {path:'/permissions/:permissionId',name:'DetailPermission', component:DetailPermission},
+
+
+  {path:'/permissions/',name:'Permissions', component:ListPermission},
+
   {path:'/permissions/create',name:'NewPermission', component:CreatePermission},
-  {path:'/permissions/edit/:permissionId',name:'EditRole', component:EditPermission},
+  {path:'/permissions/edit/:permissionId',name:'EditPermission', component:EditPermission},
+  {path:'/permissions/:permissionId',name:'DetailPermission', component:DetailPermission},
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   
 ]

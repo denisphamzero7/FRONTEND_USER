@@ -2,8 +2,11 @@
 import { RouterLink, useRouter } from 'vue-router';
 import NotificationList from './components/NotificationList.vue';
 import { useAuthStore } from './store/auth';
+import Dashboard from './views/Dashboard.vue';
+
 const auth = useAuthStore();
 auth.init();
+
 const router = useRouter();
 
 function handleLogout() {
@@ -13,37 +16,48 @@ function handleLogout() {
 </script>
 
 <template>
-  <div>
-    <nav class="bg-gray-100 p-4">
-      <ul class="flex justify-end items-center gap-4 mr-10">
-        <li>
-          <RouterLink :to="{ name: 'UserList' }">Home</RouterLink>
-        </li>
-        <li v-if="!auth.isAuthenticated">
-          <RouterLink :to="{ name: 'Login' }">Login</RouterLink>
-        </li>
-        <li v-else class="flex items-center gap-2">
-          <!-- Hiển thị tên hoặc email -->
-          <span>Xin chào, <strong>{{ auth.user?.username || auth.user?.email }}</strong></span>
-          <!-- Nút logout -->
-          <button @click="handleLogout" class="underline">Logout</button>
-        </li>
-        <li v-if="!auth.isAuthenticated">
-          <RouterLink :to="{ name: 'Register' }">Register</RouterLink>
-        </li>
-      </ul>
+  <div class="min-h-screen flex flex-col bg-gray-50">
+    <nav class="bg-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+          <!-- Left -->
+          <div class="flex items-center space-x-4">
+            <RouterLink to="/" class="text-xl font-bold text-blue-600 hover:text-blue-800">LOGO</RouterLink>
+           
+          </div>
+
+          <!-- Right -->
+          <div class="flex items-center space-x-4">
+            <template v-if="!auth.isAuthenticated">
+              <RouterLink :to="{ name: 'Login' }" class="text-gray-700 hover:text-blue-500">Login</RouterLink>
+              <RouterLink :to="{ name: 'Register' }" class="text-gray-700 hover:text-blue-500">Register</RouterLink>
+            </template>
+            <template v-else>
+              <span class="text-sm text-gray-700">
+                Xin chào, <strong>{{ auth.user?.username || auth.user?.email }}</strong>
+              </span>
+              <button @click="handleLogout" class="text-red-500 hover:underline">Logout</button>
+            </template>
+          </div>
+        </div>
+      </div>
     </nav>
 
-  <div>
-    <router-view />
-  </div>
+    <!-- Main content -->
+    <div class="flex-1 grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-4 p-4">
+      <div class="bg-white p-4 shadow-md rounded-lg">
+        <Dashboard />
+      </div>
+      <div class="bg-white p-4 shadow-md rounded-lg">
+        <router-view />
+      </div>
+    </div>
+
+    <!-- Notification -->
     <NotificationList />
   </div>
 </template>
 
 <style scoped>
-/* Ví dụ nhỏ để header đẹp hơn */
-nav ul li {
-  list-style: none;
-}
+/* Nếu cần tùy chỉnh thêm */
 </style>
