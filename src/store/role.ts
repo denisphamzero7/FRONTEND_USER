@@ -3,34 +3,45 @@ import { reactive, ref } from "vue";
 import type {
     Role
 } from "../types/role";
-import { getRoles ,createRole,deleteRole, updateRole  } from "../api/index";
+import { getRoles ,createRole,deleteRole, updateRole,getRoleById  } from "../api/index";
 type newRole = Omit<Role, '_id'>;
 export const useRoleStore = defineStore("role", () => {
   const error = ref<string | null>(null)
 const loading = ref(false)
 const keyWord =ref('')
-  const newRole = reactive<newRole>({
+  let newRole = reactive<newRole>({
     name: "",
     isActive: true,
     description: "",
-    permissions: [],
+    permissions:[],
   });
   const roles = ref<Role[]>([]);
+const getDefaultRole = (): newRole => ({
+  name: '',
+  isActive: true,
+  description: '',
+  permissions: [],
+})
+const resetRole = () => {
+  Object.assign(newRole, getDefaultRole())
+}
 
-
-  const addRole = async () => {
-    try {
-      const response = await createRole(newRole);
-      const data = response.data.data;
-      console.log("data", data);
-      roles.value.push(data)
-      error.value = null
-      return true
-    } catch (error) {
-      console.error("Login failed:", error);
-      throw error;
-    }
-  };
+const addRole = async () => {
+loading.value = true;
+try {
+const response = await createRole({ ...newRole });
+roles.value.push(response.data.data);
+error.value = null;
+// Reset form
+Object.assign(newRole, { name: "", isActive: true, description: "", permissions: [] });
+return true;
+} catch (err: any) {
+error.value = err.message || 'Lỗi khi tạo role';
+return false;
+} finally {
+loading.value = false;
+}
+};
 
 const fetchRole = async ()=>{
   loading.value = true;
@@ -81,15 +92,32 @@ const updateaRole = async (id:string,payload:any)=>{
     loading.value = false
   }
 }
-const fetchRoleId = async(id:string)=>{
+const fetchRoleId = async (id: string) => {
   loading.value = true
-
   try {
-    const data = await getRoleById(id)
+    const res = await getRoleById(id)
+    // Xem console.log để biết chính xác shape:
+    console.log("fetchRoleId res.data =", res.data)
 
-     return data
-  } catch (error) {
-    console.log(error);
+    // Nếu res.data.data tồn tại, lấy res.data.data, còn không lấy res.data
+    const role = (res.data.data !== undefined ? res.data.data : res.data) as any
+
+    Object.assign(newRole, {
+      name: role.name,
+      description: role.description,
+      isActive: role.isActive,
+      permissions: Array.isArray(role.permissions)
+        ? role.permissions.map((p: any) => p._id ?? p) // nếu permission là object có _id, hoặc chính ID
+        : [],
+    })
+
+    error.value = null
+    return true
+  } catch (e: any) {
+    error.value = e.message || "Không thể lấy thông tin role"
+    return false
+  } finally {
+    loading.value = false
   }
 }
   return {
@@ -103,11 +131,7 @@ const fetchRoleId = async(id:string)=>{
     removeRole,
     updateaRole,
     fetchRoleId
-
-  
   };
 });
-function getRoleById(id: string) {
-  throw new Error("Function not implemented.");
-}
+
 

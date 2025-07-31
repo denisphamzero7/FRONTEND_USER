@@ -35,9 +35,8 @@ export default function useUserApi() {
     try {
       const { data } = await getUsers()
       console.log('log',data);
-      users.value = data.data.result 
+      users.value = data.data 
       return users.value
-      error.value = null
     } catch (e: any) {
       error.value = e.message || 'Lỗi khi tải danh sách'
     } finally {

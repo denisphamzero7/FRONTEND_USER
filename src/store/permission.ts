@@ -4,9 +4,9 @@ import type { Permission } from '../types/permission';
 import { getPermissions  } from '../api/index';
 type NewPermission = Omit<Permission, '_id'>;
 export const usePermissionStore = defineStore('Permission', () => {
-const Permissions = ref<Permission[]>([]);
-const error = ref<string | null>(null)
-const loading = ref(false)
+const permissions = ref<Permission[]>([]);
+ const loadingPerms = ref(false)
+  const errorPerms = ref<string | null>(null)
 
 const newPermission = reactive<NewPermission>({
     name: '',
@@ -19,24 +19,30 @@ const newPermission = reactive<NewPermission>({
 
 const keyWord =ref('')
 
-const fetchPermissions = async()=> {
-    loading.value = true;
-    error.value = null;
-try {
-const response = await getPermissions();
-const {data} = response.data
-console.log('data',data);
-Permissions.value = data;
-return data;
-} catch (error) {
-console.error('fetchPermissions failed:', error);
-throw error;
-}
-}
+ async function fetchPermissions() {
+    loadingPerms.value = true
+    errorPerms.value = null
+    try {
+      const res = await getPermissions({ page: 1, limit: 1000 })
+      // ở đây res.data.data.data mới là mảng Permission[]
+      const list = res.data?.data?.data ?? []
+      console.log('list permission',list)
+      permissions.value = list
+      console.log('✅ Permissions fetched:',permissions.value)
+    } catch (err: any) {
+      console.error('❌ fetchPermissions failed:', err)
+      errorPerms.value = err.message || 'Lỗi không xác định'
+      permissions.value = []
+    } finally {
+      loadingPerms.value = false
+    }
+  }
 
 return {
-Permissions,
+permissions,
 fetchPermissions,
-newPermission 
+newPermission ,
+ loadingPerms,
+  errorPerms,
 };
 });

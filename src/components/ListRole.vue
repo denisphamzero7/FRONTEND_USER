@@ -70,7 +70,7 @@ const { fetchRole, removeRole } = roleStore
     router.push(`/roles/${roleId}`)
   }
   const editRole = (roleId: any) => {
-    router.push(`/users/edit/${roleId}`)
+    router.push(`/roles/edit/${roleId}`)
   };
   </script>
   

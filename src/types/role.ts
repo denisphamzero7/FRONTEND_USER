@@ -4,5 +4,5 @@ export interface Role {
     name:string,
     isActive:boolean,
     description:string,
-    permissions:string[]
+    permissions: string[]
 }

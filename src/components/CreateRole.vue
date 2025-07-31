@@ -24,11 +24,18 @@
       placeholder="Nhập mô tả"
     />
 
-    <div>
+     <div>
+ 
       <label class="block text-sm font-medium text-gray-700 mb-1">
         Quyền (Permissions)
       </label>
+      <div v-if="loadingPerms" class="text-sm text-gray-500">Đang tải quyền…</div>
+      <div v-else-if="permissions.length === 0" class="text-sm text-red-500">
+        Không có quyền nào.
+      </div>
+
       <select
+        v-else
         multiple
         v-model="newRole.permissions"
         class="w-full border-gray-300 rounded p-2"
@@ -38,10 +45,11 @@
           :key="perm._id"
           :value="perm._id"
         >
-          {{ perm?.name || ''}}
+          {{ perm.name }}
         </option>
       </select>
     </div>
+
 
     <button
       type="submit"
@@ -64,38 +72,28 @@ import { usePermissionStore } from '../store/permission'
 
 const router = useRouter()
 
-// Khởi tạo trạng thái cho role mới
-const newRole = ref({
-  name: '',
-  isActive: true,
-  description: '',
-  permissions: [] as string[], // Mảng các ID quyền
-})
 
 // Stores
 const roleStore = useRoleStore()
 const permissionStore = usePermissionStore()
 
-// Lấy trạng thái loading và error từ roleStore
-const { loading, error } = roleStore
 
-// Lấy danh sách quyền từ permissionStore
-const { permissions, fetchPermissions } = permissionStore
+const { loading, error,newRole,addRole } = roleStore
 
-// Fetch permissions khi component được mount
+
+const { permissions, fetchPermissions, loadingPerms, errorPerms } = permissionStore
+
+
 onMounted(() => {
   fetchPermissions()
 })
 
-/**
- * Xử lý việc tạo role mới.
- * Gọi action createRole từ roleStore và điều hướng sau khi thành công.
- */
+
 async function handleCreateRole() {
+    console.log('Payload trước khi gửi:', JSON.stringify(newRole, null, 2));
   try {
-    // Gọi action createRole với dữ liệu từ newRole.value
-    await roleStore.createRole(newRole.value)
-    // Điều hướng về trang danh sách roles sau khi tạo thành công
+    await addRole()
+
     router.push('/roles')
   } catch (err) {
     // Lỗi sẽ được xử lý và hiển thị qua biến `error` của store
