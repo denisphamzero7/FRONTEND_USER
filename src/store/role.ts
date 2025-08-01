@@ -16,6 +16,7 @@ const keyWord =ref('')
     permissions:[],
   });
   const roles = ref<Role[]>([]);
+<<<<<<< HEAD
   const searchRoleByQuery = async (query: { name?: string }) => {
     loading.value = true;
     try {
@@ -30,6 +31,17 @@ const keyWord =ref('')
       loading.value = false;
     }
   }
+=======
+const getDefaultRole = (): newRole => ({
+  name: '',
+  isActive: true,
+  description: '',
+  permissions: [],
+})
+const resetRole = () => {
+  Object.assign(newRole, getDefaultRole())
+}
+>>>>>>> a0e4f65265423a33887258edcf515f043912f982
 
 const addRole = async () => {
 loading.value = true;
@@ -98,6 +110,7 @@ const updateaRole = async (id:string,payload:any)=>{
   }
 }
 const fetchRoleId = async (id: string) => {
+<<<<<<< HEAD
   try {
     const { data } = await getRoleById(id)
     console.log(' data đây',data?.data);
@@ -105,6 +118,33 @@ const fetchRoleId = async (id: string) => {
   } catch (e: any) {
     error.value = e.message || `Lỗi khi tải user ${id}`
     return null
+=======
+  loading.value = true
+  try {
+    const res = await getRoleById(id)
+    // Xem console.log để biết chính xác shape:
+    console.log("fetchRoleId res.data =", res.data)
+
+    // Nếu res.data.data tồn tại, lấy res.data.data, còn không lấy res.data
+    const role = (res.data.data !== undefined ? res.data.data : res.data) as any
+
+    Object.assign(newRole, {
+      name: role.name,
+      description: role.description,
+      isActive: role.isActive,
+      permissions: Array.isArray(role.permissions)
+        ? role.permissions.map((p: any) => p._id ?? p) // nếu permission là object có _id, hoặc chính ID
+        : [],
+    })
+
+    error.value = null
+    return true
+  } catch (e: any) {
+    error.value = e.message || "Không thể lấy thông tin role"
+    return false
+  } finally {
+    loading.value = false
+>>>>>>> a0e4f65265423a33887258edcf515f043912f982
   }
 }
   return {
@@ -117,8 +157,12 @@ const fetchRoleId = async (id: string) => {
     keyWord,
     removeRole,
     updateaRole,
+<<<<<<< HEAD
     fetchRoleId,
     searchRoleByQuery
+=======
+    fetchRoleId
+>>>>>>> a0e4f65265423a33887258edcf515f043912f982
   };
 });
 

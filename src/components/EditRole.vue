@@ -45,6 +45,7 @@
       </div>
 
       <p v-if="error" class="text-red-500">{{ error }}</p>
+
     </form>
   </div>
 </template>
@@ -90,10 +91,11 @@ const handleSubmit = async () => {
     router.push('/roles')
   }
 }
-
 onMounted(() => {
   loadData();
   fetchPermissions();
   
 });
 </script>
+
+

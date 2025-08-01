@@ -15,9 +15,6 @@ const newPermission = reactive<NewPermission>({
     module: ''
   });
 const keyWord =ref('')
-
-
-
  async function fetchPermissions() {
     loadingPerms.value = true
     errorPerms.value = null
@@ -29,7 +26,7 @@ const keyWord =ref('')
       permissions.value = list
       console.log('Permissions fetched:',permissions.value)
     } catch (err: any) {
-      console.error('fetchPermissions failed:', err)
+      console.error('❌ fetchPermissions failed:', err)
       errorPerms.value = err.message || 'Lỗi không xác định'
       permissions.value = []
     } finally {
@@ -110,9 +107,8 @@ const removePermission = async (id:string)=>{
       e.value = e.message || 'Không thể xoá '
       permissions.value.splice(index,0, orinalUser)
     }
-}
-  
 
+  }
 return {
 permissions,
 fetchPermissions,
@@ -124,6 +120,5 @@ newPermission ,
   fetchPermissionId,
   addPermission,
   updateaPermission,
-  searchPermissionByQuery 
-};
-});
+  searchPermissionByQuery
+}})

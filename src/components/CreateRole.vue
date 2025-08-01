@@ -35,6 +35,7 @@
         class="text-sm text-gray-500 mb-1"
       >
         chưa có quyền nào
+
       </div>
 
       <select
@@ -44,10 +45,12 @@
         class="w-full border-gray-300 rounded p-2 h-40"
       >
         <option v-for="perm in permissions" :key="perm._id" :value="perm._id">
+
           {{ perm.name }}
         </option>
       </select>
     </div>
+
 
     <button
       type="submit"
@@ -76,7 +79,6 @@ const router = useRouter();
 // Stores
 const roleStore = useRoleStore();
 const permissionStore = usePermissionStore();
-
 const { loading, error, newRole, addRole } = roleStore;
 
 const { permissions, fetchPermissions, loadingPerms, errorPerms } =
