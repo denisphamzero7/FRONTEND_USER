@@ -16,6 +16,9 @@ import EditPermission from '../components/EditPermission.vue'
 import DetailPermission from '../components/DetailPermission.vue'
 import Dashboard from '../views/Dashboard.vue'
 import ListPermission from '../components/ListPermission.vue'
+import { defineAbilityFor } from '../ability/defineAbility'
+
+const ability = defineAbilityFor(JSON.parse(localStorage.getItem('user') || '{}'));
 
 const routes = [
   { path: '/', name: 'UserList', component: ListUser },
@@ -45,5 +48,13 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
+// router.beforeEach((to, from, next) => {
+//   const { action, subject } = to.meta as { action?: string; subject?: string };
 
+//   if (!action || !subject || ability.can(action, subject)) {
+//     next();
+//   } else {
+//     next({ name: 'Dashboard' }); 
+//   }
+// })
 export default router

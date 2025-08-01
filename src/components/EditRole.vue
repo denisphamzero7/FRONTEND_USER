@@ -1,99 +1,99 @@
 <template>
-    <form @submit.prevent="handleUpdateRole" class="space-y-4">
-      <Input
-        v-model="role.name"
-        label="Tên Role"
-        placeholder="Nhập tên role"
-      />
-  
+  <div class="max-w-2xl mx-auto p-6 bg-white rounded shadow">
+    <h2 class="text-2xl font-semibold mb-6">Chỉnh sửa vai trò</h2>
+
+    <form @submit.prevent="handleSubmit" class="space-y-4">
+      <Input v-model="form.name" label="Tên vai trò" placeholder="Nhập tên vai trò" />
+      <Input v-model="form.description" label="Mô tả" placeholder="Nhập mô tả" />
+
       <div class="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          id="isActive"
-          v-model="role.isActive"
-          class="h-4 w-4"
-        />
-        <label for="isActive" class="text-sm font-medium text-gray-700">
-          Active
-        </label>
+        <input type="checkbox" id="isActive" v-model="form.isActive" class="h-4 w-4" />
+        <label for="isActive">Kích hoạt</label>
       </div>
-  
-      <Input
-        v-model="role.description"
-        label="Mô tả"
-        placeholder="Nhập mô tả"
-      />
-  
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          Quyền (Permissions)
-        </label>
-        <select
-          multiple
-          v-model="roles.permissions"
-          class="w-full border-gray-300 rounded p-2"
-        >
-          <option
-            v-for="perm in Permissions"
-            :key="perm._id"
-            :value="perm._id"
-          >
-            {{ perm.name }}
-          </option>
-        </select>
-      </div>
-  
-      <button
-        type="submit"
-        class="mt-6 w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-        :disabled="loading"
+      <label class="block text-sm font-medium text-gray-700 mb-1"
+        >Thêm quyền</label
       >
-        {{ loading ? 'Đang lưu...' : 'Lưu thay đổi' }}
-      </button>
+      <div v-if="loadingPerms">>>>></div>
+      <div v-else-if="errorPerms">{{ errorPerms }}</div>
+      <div
+        v-else-if="permissions.length === 0"
+        class="text-sm text-gray-500 mb-1"
+      >
+        chưa có quyền nào
+      </div>
+
+      <select
+        v-else
+        multiple
+        v-model="form.permissions"
+        class="w-full border-gray-300 rounded p-2 h-40"
+      >
+        <option v-for="perm in permissions" :key="perm._id" :value="perm._id">
+          {{ perm.name }}
+        </option>
+      </select>
+    </div>
+      <div class="flex justify-end space-x-2">
+        <button
+          type="submit"
+          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+          :disabled="loading"
+        >
+          {{ loading ? "Đang cập nhật..." : "Cập nhật" }}
+        </button>
+      </div>
+
+      <p v-if="error" class="text-red-500">{{ error }}</p>
     </form>
-  </template>
-  
-  <script setup lang="ts">
-  import { onMounted, computed } from 'vue'
-  import { useRouter, useRoute } from 'vue-router'
-  import Input from './Input.vue'
-  
-  import { useRoleStore } from '../store/role'
-  import { usePermissionStore } from '../store/permission'
-  
-  const router = useRouter()
-  const route = useRoute()
-  
-  const roleStore = useRoleStore()
-  const permissionStore = usePermissionStore()
-  
-  const { fetchRoleId, updateaRole, loading, error, roles } = roleStore
-  const { fetchPermissions, Permissions } = permissionStore
-  
-  onMounted(async () => {
-    const id = route.params.id as string
-    await fetchPermissions()
-    await fetchRoleId(id)
-  })
-  
-  async function handleUpdateRole() {
-    try {
-      const id = roles._id!
-      const payload = {
-        name: roles.name,
-        isActive: roles.isActive,
-        description: roles.description,
-        permissions: roles.permissions,
-      }
-      const success = await updateRole(id, payload)
-      if (success) {
-        router.push({ name: 'RoleList' })
-      } else {
-        console.error('Cập nhật thất bại:', error.value)
-      }
-    } catch (e) {
-      console.error('Lỗi khi cập nhật:', e)
-    }
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useRoute, useRouter } from 'vue-router'
+import { onMounted, reactive } from 'vue'
+import { useRoleStore } from '../store/role'
+import Input from '../components/Input.vue'
+import { usePermissionStore } from '../store/permission'
+
+const route = useRoute()
+const router = useRouter()
+const { fetchRoleId, updateaRole, error, loading } = useRoleStore()
+const { permissions, fetchPermissions, loadingPerms, errorPerms } = usePermissionStore();
+const id  = route.params?.roleId as string; 
+console.log(id);
+const form = reactive({
+  name: '',
+  description: '',
+  isActive: true,
+  permissions: [] as string[],
+})
+
+const loadData = async () => {
+  const data = await fetchRoleId(id)
+  console.log('data',data);
+  if (data) {
+    Object.assign(form, {
+      name: data.name,
+      description: data.description,
+      isActive: data.isActive,
+      permissions: Array.isArray(data.permissions)
+      ? data.permissions.map((p: any) => p._id)
+      : [],
+    })
   }
-  </script>
+}
+
+const handleSubmit = async () => {
+  const success = await updateaRole(id, { ...form })
+  if (success) {
+    router.push('/roles')
+  }
+}
+
+onMounted(() => {
+  loadData();
+  fetchPermissions();
   
+});
+</script>

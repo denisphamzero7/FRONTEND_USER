@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
 import type {
-  AuthUser,
   LoginCredentials,
   RegisterCredentials,
   TokenData,
 } from "../types/auth";
 import { login as loginApi, register as registerApi } from "../api/index";
+
 
 export const useAuthStore = defineStore("auth", () => {
   const credentials = reactive<LoginCredentials>({

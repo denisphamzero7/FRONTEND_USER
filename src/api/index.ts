@@ -39,9 +39,9 @@ export const createRole = ( data: any)=> api.post("/roles",data)
 export const updateRole = (id: string, data: any)=> api.patch(`/roles/${id}`,data)
 export const deleteRole = (id: string) => api.delete(`/roles/${id}`);
 //permission
-export const getPermissions = () => api.get("/permissions");
-export const getPermission = (id: string) => api.get(`/permissions/${id}`);
-export const createPermission =  (data: any)=> api.post("/permissions,",data)
+export const getPermissions = (params?: any) => api.get("/permissions",{params});
+export const getPermissionId = (id: string) => api.get(`/permissions/${id}`);
+export const createPermission =  (data: any)=> api.post("/permissions",data)
 export const updatePermission = (id: string, data: any)=> api.patch(`/permissions/${id}`,data)
 export const deletePermission = (id: string) => api.delete(`/permissions/${id}`);
 //auth

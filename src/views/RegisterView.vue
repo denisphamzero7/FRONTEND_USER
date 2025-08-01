@@ -29,6 +29,9 @@
 import Input from '../components/Input.vue';
 import RoundButton from '../components/RoundButton.vue'
 import { useNotification } from '../composable/useNotification';
+import { useRouter } from 'vue-router';
+  
+  const router = useRouter();
 import { useAuthStore } from '../store/auth';
 // const formElement = ref<HTMLElement | null>(null)
 // const inputElement = ref<HTMLInputElement | null>(null)
@@ -41,7 +44,7 @@ const handleRegister = async () => {
   try {
     await register();
     addNotification('Thành công rồi')
-    
+    router.push({ name: 'Login' });
   } catch (e) {
     addNotification('đăng nhập thất bại')
   }

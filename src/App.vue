@@ -20,13 +20,13 @@ function handleLogout() {
     <nav class="bg-white shadow-md">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
-          <!-- Left -->
+      
           <div class="flex items-center space-x-4">
             <RouterLink to="/" class="text-xl font-bold text-blue-600 hover:text-blue-800">LOGO</RouterLink>
            
           </div>
 
-          <!-- Right -->
+
           <div class="flex items-center space-x-4">
             <template v-if="!auth.isAuthenticated">
               <RouterLink :to="{ name: 'Login' }" class="text-gray-700 hover:text-blue-500">Login</RouterLink>
@@ -44,7 +44,7 @@ function handleLogout() {
     </nav>
 
     <!-- Main content -->
-    <div class="flex-1 grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-4 p-4">
+    <div class="flex-1 grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-4 p-4">
       <div class="bg-white p-4 shadow-md rounded-lg">
         <Dashboard />
       </div>

@@ -3,34 +3,50 @@ import { reactive, ref } from "vue";
 import type {
     Role
 } from "../types/role";
-import { getRoles ,createRole,deleteRole, updateRole  } from "../api/index";
+import { getRoles ,createRole,deleteRole, updateRole,getRoleById  } from "../api/index";
 type newRole = Omit<Role, '_id'>;
 export const useRoleStore = defineStore("role", () => {
   const error = ref<string | null>(null)
 const loading = ref(false)
 const keyWord =ref('')
-  const newRole = reactive<newRole>({
+  let newRole = reactive<newRole>({
     name: "",
     isActive: true,
     description: "",
-    permissions: [],
+    permissions:[],
   });
   const roles = ref<Role[]>([]);
-
-
-  const addRole = async () => {
+  const searchRoleByQuery = async (query: { name?: string }) => {
+    loading.value = true;
     try {
-      const response = await createRole(newRole);
-      const data = response.data.data;
-      console.log("data", data);
-      roles.value.push(data)
-      error.value = null
-      return true
-    } catch (error) {
-      console.error("Login failed:", error);
-      throw error;
+      const res = await getRoles(query);
+      const list = res.data?.data?.result?? [];
+      roles.value = list;
+      return list;
+    } catch (e: any) {
+      error.value = e.message || 'Không thể tìm quyền ds';
+      return [];
+    } finally {
+      loading.value = false;
     }
-  };
+  }
+
+const addRole = async () => {
+loading.value = true;
+try {
+const response = await createRole({ ...newRole });
+roles.value.push(response.data.data);
+error.value = null;
+// Reset form
+Object.assign(newRole, { name: "", isActive: true, description: "", permissions: [] });
+return true;
+} catch (err: any) {
+error.value = err.message || 'Lỗi khi tạo role';
+return false;
+} finally {
+loading.value = false;
+}
+};
 
 const fetchRole = async ()=>{
   loading.value = true;
@@ -81,15 +97,14 @@ const updateaRole = async (id:string,payload:any)=>{
     loading.value = false
   }
 }
-const fetchRoleId = async(id:string)=>{
-  loading.value = true
-
+const fetchRoleId = async (id: string) => {
   try {
-    const data = await getRoleById(id)
-
-     return data
-  } catch (error) {
-    console.log(error);
+    const { data } = await getRoleById(id)
+    console.log(' data đây',data?.data);
+    return data.data
+  } catch (e: any) {
+    error.value = e.message || `Lỗi khi tải user ${id}`
+    return null
   }
 }
   return {
@@ -102,12 +117,9 @@ const fetchRoleId = async(id:string)=>{
     keyWord,
     removeRole,
     updateaRole,
-    fetchRoleId
-
-  
+    fetchRoleId,
+    searchRoleByQuery
   };
 });
-function getRoleById(id: string) {
-  throw new Error("Function not implemented.");
-}
+
 

@@ -25,7 +25,7 @@
   
           <tr v-for="role in roles" :key="role._id">
             <td class="px-3 py-3 text-center">{{ role.name }}</td>
-            <td class="px-3 py-3 text-center">{{ role.isActive ? '✅' : '❌' }}</td>
+            <td class="px-3 py-3 text-center"><input type="checkbox" id="isActive" v-model=" role.isActive" class="h-4 w-4" /></td>
             <td class="px-3 py-3 text-center">{{ role.description }}</td>
             <td class="px-3 py-3 text-center">  {{role.permissions?.length }}</td>
             <td class="px-3 py-3 text-center space-x-2">
@@ -61,7 +61,21 @@ const { fetchRole, removeRole } = roleStore
   onMounted(() => {
     fetchRole();
   });
-  
+  watch(
+  keyWord,
+  (value) => {
+    const q = value.trim();
+    if (q) {
+      roleStore.searchRoleByQuery({ name: q });
+    } else {
+      roleStore.fetchRole();
+    }
+  },
+  {
+    immediate: true,  
+   
+  }
+);
  
   const handleCreateRole= () => {
     router.push('/roles/create')
@@ -70,7 +84,7 @@ const { fetchRole, removeRole } = roleStore
     router.push(`/roles/${roleId}`)
   }
   const editRole = (roleId: any) => {
-    router.push(`/users/edit/${roleId}`)
+    router.push(`/roles/edit/${roleId}`)
   };
   </script>
   
